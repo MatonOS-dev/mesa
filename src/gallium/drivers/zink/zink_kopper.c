@@ -1305,7 +1305,13 @@ zink_kopper_set_swap_interval(struct pipe_context *pctx, struct pipe_resource *p
 {
    struct zink_resource *res = zink_resource(pres);
    struct zink_screen *screen = zink_screen(pctx->screen);
-   assert(res->obj->dt);
+   /* kill_swapchain() replaces the object after a fatal acquire/present
+    * result (e.g. the window was destroyed); there is no swapchain left.
+    */
+   if (!res->obj->dt) {
+      mesa_loge("zink: swap interval set on a killed swapchain, ignored");
+      return;
+   }
    struct kopper_displaytarget *cdt = res->obj->dt;
    VkPresentModeKHR old_present_mode = cdt->present_mode;
 
