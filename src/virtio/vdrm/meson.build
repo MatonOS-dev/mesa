@@ -30,7 +30,6 @@ libvdrm = static_library(
   gnu_symbol_visibility: 'hidden',
   dependencies: [
     dep_libdrm,
-    dep_libdrm_amdgpu,
     dep_valgrind,
     idep_mesautil,
   ],
